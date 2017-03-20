@@ -1,23 +1,8 @@
 const router = require('express').Router();
-const User = require('../services/user');
+const userRoutes = require('./user');
+const filesRouter = require('./file');
 
-router.post('/registration', (req,res) =>{
-   User.createNewUser(req.body, err => {
-      if(err){
-         res.status(500).send(err);
-      }
-      else res.status(200).send('User was created successful');
-   });
-});
-
-router.post('/login', (req,res) => {
-   let email = req.body.email;
-   let password = req.body.password;
-   User.checckUserExistance(email, password, (err,user) => {
-      if(err) res.status(500).send(err);
-      else if(!user) res.send(404).send("wrong combination of login and password");
-      else res.status(200).send(user);
-   })
-});
+router.use('/user',userRoutes);
+router.use('/file',filesRouter);
 
 module.exports = router;

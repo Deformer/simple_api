@@ -1,29 +1,28 @@
 const User = require('../models/user');
 const assert = require('assert');
 
-exports.createNewUser = (userObj,cb) => {
-    assert.equal(typeof cb, 'function',
-    "callback should be a function");
-    let user = new User(userObj);
+exports.createNewUser = (req,res) => {
+    let user = new User(req.body);
     user.save( err => {
         if(err){
+            res.status(500).send(err);
             console.error(err);
-            cb(err);
         }
-        else cb(null);
+        else res.status(200).send('User was created successful');
     });
 };
 
-exports.checckUserExistance = (email, password, cb) => {
-    assert.equal(typeof cb, 'function',
-        "callback should be a function");
+
+exports.checkUserExistence = (req,res) => {
+    let email = req.body.email;
+    let password = req.body.password;
     User.findOne( {email: email}, (err,user) =>{
-        if(err) cb(err);
-        else if(!user) cb(null,null);
+        if(err) res.status(500).send(err);
+        else if(!user) res.send(404).send("wrong combination of login and password");
         else{
             let correctPassword = user.checkPassword(password);
-            if(!correctPassword) cb(null,null);
-            else cb(null,user)
+            if(!correctPassword) res.send(404).send("wrong combination of login and password");
+            else res.status(200).send(user);
         }
     });
 };
