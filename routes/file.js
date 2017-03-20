@@ -8,7 +8,7 @@ const path = require('path');
 const upload = multer({ dest: path.join(__dirname, '../public/uploads/') });
 
 router.get('/',file.getForm);
-router.post('/upload', upload.any() , file.upload);
-router.get('/getFile/:filename', file.getFile);
+router.post('/', upload.any() , file.upload);
+router.get('/:filename', file.getFile);
 
 module.exports = router;

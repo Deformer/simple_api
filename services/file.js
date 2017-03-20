@@ -25,16 +25,7 @@ exports.upload = (req,res) => {
 };
 
 exports.getFile = (req,res) => {
-    let file = new fs.ReadStream(uploadDir+req.params.filename);
-    file.pipe(res);
-
-    file.on('error', err => {
-        res.status(500).send(err);
-        console.error(err);
-    });
-
-    res.on('close', () => {
-        file.destroy();
-    });
+    let file = uploadDir+req.params.filename
+    res.download(file);
 };
 

@@ -5,6 +5,8 @@ const router = require('./routes');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('./db');
+const morgan = require('morgan');
+const config = require('config');
 
 app.use(session({
     secret: 'foo',
@@ -12,6 +14,12 @@ app.use(session({
     saveUninitialized:false,
     store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
+
+if(config.util.getEnv('NODE_ENV') !== 'test') {
+    app.use(morgan('combined'));
+}
+
+
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
